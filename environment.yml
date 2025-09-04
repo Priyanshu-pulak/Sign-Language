@@ -1,0 +1,17 @@
+name: signLanguage
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - jupyter
+  - ipykernel
+  - scikit-learn
+  - pip:
+      - streamlit
+      - opencv-python
+      - mediapipe
+      - numpy
+      - google-generativeai
+      - gtts
