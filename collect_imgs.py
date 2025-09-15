@@ -1,18 +1,16 @@
-import os
 import cv2
+from pathlib import Path
 
-DATA_DIR = './Data'
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+DATA_DIR = Path('./Data')
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 number_of_classes = 26
 dataset_size = 200
 
 cap = cv2.VideoCapture(0)
 for j in range(number_of_classes):
-    class_dir = os.path.join(DATA_DIR, str(j))
-    if not os.path.exists(class_dir):
-        os.makedirs(class_dir)
+    class_dir = DATA_DIR / str(j)
+    class_dir.mkdir(parents=True, exist_ok=True)
 
     print(f'Collecting data for class {j}')
 
@@ -33,7 +31,8 @@ for j in range(number_of_classes):
         else:
             cv2.imshow('frame', frame)
             cv2.waitKey(25)
-            cv2.imwrite(os.path.join(class_dir, '{}.jpg'.format(counter)), frame)
+            file_path = class_dir / f'{counter}.jpg'
+            cv2.imwrite(str(file_path), frame)
             counter += 1
             if counter >= dataset_size:
                 break
