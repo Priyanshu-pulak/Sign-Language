@@ -34,6 +34,6 @@ for dir_path in DATA_DIR.iterdir():
         else:
             print(f"No hand landmarks detected in image: {img_path}")
 
-output_file = Path("data.pickle")
+output_file = Path("data.pkl")
 with output_file.open('wb') as f:
     pickle.dump({'data': data, 'labels': labels}, f)
