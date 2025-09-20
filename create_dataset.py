@@ -12,27 +12,37 @@ data = []
 labels = []
 
 for dir_path in DATA_DIR.iterdir():
-    for img_path in dir_path.iterdir():
+    if dir_path.is_dir():
+        for img_path in dir_path.iterdir():
+            if not img_path.suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp']:
+                continue
 
-        img = cv2.imread(str(img_path))
-        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = hands.process(img_rgb)
+            img = cv2.imread(str(img_path))
+            if img is None:
+                print(f"Failed to load image: {img_path}, skipping...")
+                continue
 
-        if results.multi_hand_landmarks:
-            hand_landmarks = results.multi_hand_landmarks[0]
-            data_aux = []
+            img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            results = hands.process(img_rgb)
 
-            for lm in hand_landmarks.landmark:
-                data_aux.append(lm.x)
-                data_aux.append(lm.y)
+            if results.multi_hand_landmarks:
+                hand_landmarks = results.multi_hand_landmarks[0]
+                data_aux = []
 
-            if len(data_aux) == 42:
-                data.append(data_aux)
-                labels.append(dir_path.name)
+                wrist_x = hand_landmarks.landmark[0].x
+                wrist_y = hand_landmarks.landmark[0].y
+
+                for lm in hand_landmarks.landmark:
+                    data_aux.append(lm.x - wrist_x)
+                    data_aux.append(lm.y - wrist_y)
+
+                if len(data_aux) == 42:
+                    data.append(data_aux)
+                    labels.append(dir_path.name)
+                else:
+                    print(f"Incomplete landmarks in image : {img_path}, skipping...")
             else:
-                print(f"Incomplete landmarks in image : {img_path}, skipping...")
-        else:
-            print(f"No hand landmarks detected in image: {img_path}")
+                print(f"No hand landmarks detected in image: {img_path}")
 
 output_file = Path("data.pkl")
 with output_file.open('wb') as f:
