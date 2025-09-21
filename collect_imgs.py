@@ -94,10 +94,10 @@ def capture_images(class_id : int, num_images : int = 20, interval : float = .8)
     cap.release()
     return last_frame
 
-num_classes = 2
+num_classes = 26
 
 for i in range(num_classes):
-    last_frame = capture_images(i, 10, .3)
+    last_frame = capture_images(i, 200, .3)
     if i < num_classes - 1 and last_frame is not None:
         while True:
             frame = last_frame.copy()
