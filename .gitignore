@@ -209,3 +209,6 @@ __marimo__/
 # macOS metadata files
 .DS_Store
 Data/
+
+# Project-specific files
+data.pkl
